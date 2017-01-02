@@ -1,0 +1,37 @@
+.App {
+
+}
+
+.App-header {
+  background-color: #222;
+  height: 100px;
+  margin: 0 auto;
+  color: white;
+}
+
+.App-header-navigation {
+  text-align: right;
+}
+
+.App-intro {
+  font-size: large;
+
+}
+
+.logo {
+  float: left;
+  padding: 30px;
+}
+
+.menu ul {
+  float:right;
+  list-style: none;
+  margin: 0;
+  padding: 50px;
+}
+.menu li {
+  padding-left: 10px;
+  padding-right: 10px;
+  display: inline-block;
+}
+

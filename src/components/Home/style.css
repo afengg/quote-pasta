@@ -1,0 +1,39 @@
+.filterableItemList {
+  text-align: center;
+}
+
+.itemSummary {
+  font-size: small;
+  padding: 50px;
+  width: 50%;
+  margin: auto;
+  border: 1px;
+  border-style: solid;
+  border-color: #e0e0e0;
+}
+
+.itemUtilities {
+  float: left;
+  width: 25%;
+  overflow: hidden;
+}
+
+.itemContent {
+  width: 75%;
+  overflow: hidden;
+}
+
+.itemSummary:nth-of-type(odd) {
+  background: #e0e0e0;
+}
+
+.tagsList{
+  margin: 20px;
+}
+
+.tag {
+  margin: 5px;
+  padding: 5px;
+  background: #a1c1d1;
+
+}
