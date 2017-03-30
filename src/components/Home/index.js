@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import classnames from 'classnames';
 import './style.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import axios from 'axios';
 
 
 class Tag extends React.Component {
@@ -38,7 +39,8 @@ class ItemSummary extends React.Component {
     };
     }
   render() {
-    var name = this.props.item.name;
+    var quote = this.props.item.quote;
+    var author = this.props.item.author;
     return (
     /*
       <tr>
@@ -53,14 +55,15 @@ class ItemSummary extends React.Component {
       */
       <div className="itemSummary">
         <div className="itemUtilities">
-          <CopyToClipboard text={name}
+          <h4>{author}</h4>
+          <CopyToClipboard text={quote}
                                onCopy={() => this.setState({copied: true})}>
                                <button>Copy to Clipboard</button>
           </CopyToClipboard>
           <TagsList tags={this.props.item.tags}/>
         </div>
         <div className="itemContent">
-          <p>{name}</p>
+          <p>{quote}</p>
         </div>
       </div>
     );
@@ -69,16 +72,15 @@ class ItemSummary extends React.Component {
 
 class ItemList extends React.Component {
   render(){
-    
     var rows = [];
     this.props.items.forEach((item) => {
     
-        /* Note that the following if statement searches the name STRING and the tags ARRAY. so searching for a tag will only
+        /* Note that the following if statement searches the quote STRING and the tags ARRAY. so searching for a tag will only
            provide the results once the entire tag is entered in, instead of part of the tag. React components only pass props
            in one direction, and we joined the tags array in the smallest component instead of the largest component.
         
         */
-        if (item.name.indexOf(this.props.filterText) === -1 && item.tags.indexOf(this.props.filterText) === -1){
+        if (item.quote.indexOf(this.props.filterText) === -1 && item.tags.indexOf(this.props.filterText) === -1){
           return;
         }
         rows.push(<ItemSummary item={item} />);
@@ -133,13 +135,24 @@ class FilterableItemList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      filterText: ''
+      filterText: '',
+      items: []
     };
+    this.loadItemsFromServer = this.loadItemsFromServer.bind(this);
     
     this.handleUserInput = this.handleUserInput.bind(this);
     
     }
-    
+  loadItemsFromServer(){
+    axios.get(this.props.url)
+      .then(res => {
+        this.setState({items: res.data});
+      })
+  }
+  componentDidMount(){
+      this.loadItemsFromServer();
+      setInterval(this.loadItemsFromServer, this.props.pollInterval);
+  }  
   handleUserInput(filterText){
       this.setState({
         filterText: filterText
@@ -151,7 +164,7 @@ class FilterableItemList extends React.Component {
         <SearchBar filterText={this.state.filterText}
                    onUserInput={this.handleUserInput}
                    />
-        <ItemList items={this.props.items}
+        <ItemList  items={this.state.items}
                    filterText={this.state.filterText}/>
       </div>
     );
@@ -178,7 +191,9 @@ export default class Home extends Component {
     const { className, ...props } = this.props;
     return (
       <div className={classnames('Home', className)} {...props}>
-        <FilterableItemList items={PRODUCTS} />
+        <FilterableItemList
+          url='http://localhost:3001/api/items'
+          pollInterval={2000}/>
       </div>
     );
   }

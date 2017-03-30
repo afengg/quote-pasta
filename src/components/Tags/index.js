@@ -25,7 +25,7 @@ class TagRow extends React.Component {
       </tr>
     );
   }
-} 
+}
 
 class TagsTable extends React.Component {
   render(){
